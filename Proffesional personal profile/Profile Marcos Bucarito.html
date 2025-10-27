@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Marcos Bucarito — Electrical Engineer</title>
+
+    <style>
+        :root{
+          --bg:#040608;
+          --card:#0b1013;
+          --neon:#00ff6a;
+          --neon-2:#00f07a;
+          --muted:#9aa4a6;
+          --glass: rgba(255,255,255,0.03);
+          --accentGlow: 0 6px 30px rgba(0,255,106,0.12);
+          --radius:14px;
+          font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        html,body{
+          height:100%;
+          margin:0;
+          background:var(--bg);
+          color: #e6f7ee;
+          -webkit-font-smoothing:antialiased;
+          -moz-osx-font-smoothing:grayscale;
+        }
+
+        #bgCanvas{
+          position: fixed;
+          left:0;
+          top:0;
+          width:100%;
+          height:100%;
+          z-index:0;
+          display:block;
+          background: radial-gradient(1200px 600px at 10% 10%, rgba(0,255,106,0.03), transparent 2%),
+                      radial-gradient(800px 400px at 90% 80%, rgba(0,240,122,0.02), transparent 2%),
+                      linear-gradient(180deg, rgba(0,0,0,0.75), rgba(0,0,0,0.9));
+        }
+
+        .wrap{
+          position: relative;
+          z-index: 2;
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          padding:40px 20px;
+        }
+
+        .card {
+          width: 100%;
+          max-width: 980px;
+          display:grid;
+          grid-template-columns: 220px 1fr;
+          gap: 28px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+          border-radius: var(--radius);
+          box-shadow: 0 10px 40px rgba(0,0,0,0.6), var(--accentGlow);
+          border: 1px solid rgba(0,255,106,0.06);
+          padding: 28px;
+          backdrop-filter: blur(6px);
+        }
+
+        .left {
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:18px;
+        }
+
+        .profile-square {
+          width: 120px;
+          height: 120px;
+          border-radius: 8px;
+          overflow:hidden;
+          border: 2px solid rgba(0,255,106,0.12);
+          box-shadow: 0 6px 20px rgba(0,255,106,0.06);
+          background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2));
+        }
+
+        .profile-square img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+          object-position: center top;
+          display:block;
+          transition: transform .35s ease;
+        }
+
+        .profile-square:hover img { transform: scale(1.03); }
+
+        .name {
+          font-weight:700;
+          font-size:1.18rem;
+          color:var(--neon);
+          letter-spacing:0.2px;
+          text-align:center;
+        }
+
+        .role {
+          font-size:0.88rem;
+          color:var(--muted);
+          text-align:center;
+        }
+
+        .contact {
+          margin-top:6px;
+          display:flex;
+          gap:10px;
+          flex-direction:column;
+          width:100%;
+          align-items:center;
+        }
+
+        .contact a{
+          color:var(--neon);
+          text-decoration:none;
+          font-weight:600;
+          font-size:0.92rem;
+          border-radius:10px;
+          padding:8px 10px;
+          background: rgba(0,255,106,0.02);
+          border:1px solid rgba(0,255,106,0.04);
+        }
+
+        .contact a:hover{
+          box-shadow: 0 6px 24px rgba(0,255,106,0.08);
+          transform: translateY(-3px);
+        }
+
+        .right{
+          display:flex;
+          flex-direction:column;
+          gap:18px;
+        }
+
+        .headline h2{
+          margin:0;
+          font-size:1.1rem;
+          color:var(--neon);
+          letter-spacing:0.4px;
+        }
+
+        .headline p {
+          margin:0;
+          color:var(--muted);
+          font-size:0.92rem;
+        }
+
+        .about {
+          background: rgba(255,255,255,0.015);
+          padding:14px;
+          border-radius:12px;
+          border:1px solid rgba(255,255,255,0.02);
+          color:#dfffe6;
+          line-height:1.55;
+          font-size:0.95rem;
+        }
+
+        .skills {
+          display:flex;
+          gap:12px;
+          align-items:center;
+          flex-wrap:wrap;
+        }
+
+        .skill {
+          min-width:60px;
+          height:60px;
+          border-radius:50%;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          font-size:0.8rem;
+          color:#001;
+          font-weight:700;
+          background: linear-gradient(180deg, var(--neon), var(--neon-2));
+          box-shadow: 0 6px 22px rgba(0,255,106,0.14);
+          border: 2px solid rgba(255,255,255,0.06);
+          text-align:center;
+          padding:4px;
+        }
+
+        .btn {
+          padding:10px 14px;
+          background:transparent;
+          color:var(--neon);
+          border:1px solid rgba(0,255,106,0.12);
+          border-radius:10px;
+          cursor:pointer;
+          font-weight:600;
+          transition: all .22s ease;
+        }
+
+        .btn.primary {
+          background: linear-gradient(90deg, rgba(0,255,106,0.12), rgba(0,255,106,0.06));
+          box-shadow: 0 8px 30px rgba(0,255,106,0.06);
+        }
+
+        .btn:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 10px 30px rgba(0,255,106,0.08);
+        }
+
+        .modal {
+          display:none;
+          position:fixed;
+          left:0; top:0;
+          width:100%; height:100%;
+          background: rgba(0,0,0,0.75);
+          z-index:5;
+          align-items:center;
+          justify-content:center;
+          padding:20px;
+        }
+
+        .panel {
+          width:95%;
+          max-width:980px;
+          height:85%;
+          background: linear-gradient(180deg, rgba(6,8,7,0.95), rgba(10,15,12,0.95));
+          border-radius:12px;
+          padding:12px;
+          border:1px solid rgba(0,255,106,0.06);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+          display:flex;
+          flex-direction:column;
+          gap:12px;
+        }
+
+        .panel iframe {
+          width:100%;
+          height:100%;
+          border-radius:8px;
+          border:1px solid rgba(255,255,255,0.02);
+          background: #091014;
+        }
+
+        .download-link {
+          color:var(--neon);
+          text-decoration:none;
+          font-weight:700;
+          padding:8px 10px;
+          border-radius:8px;
+          border:1px solid rgba(0,255,106,0.06);
+          background: rgba(0,255,106,0.02);
+        }
+
+        .footer {
+          text-align:center;
+          margin-top:16px;
+          color:var(--muted);
+          font-size:0.85rem;
+        }
+
+        @media (max-width:880px){
+          .card{ grid-template-columns: 1fr; padding:20px; gap:18px;}
+          .profile-square{ width:96px; height:96px;}
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="wrap">
+    <main class="card">
+        <div class="left">
+            <div class="profile-square">
+                <img src=".idea/profile.JPG" alt="Marcos Bucarito">
+            </div>
+
+            <div>
+                <div class="name">Marcos Bucarito</div>
+                <div class="role">Electrical & Electronics Engineering CS Minor</div>
+            </div>
+
+            <div class="contact">
+                <a class="btn primary" id="openResumeBtn">View Resume</a>
+            </div>
+
+            <a href="https://www.linkedin.com/in/marcos-bucarito/" target="_blank" rel="noreferrer" class="btn" style="width:100%; text-align:center;">LinkedIn</a>
+        </div>
+
+        <div class="right">
+            <div class="headline">
+                <h2>Interested in emerging technologies and providing the best engineering solutions.</h2>
+            </div>
+
+            <div class="about">
+                <strong>About me</strong>
+                <p style="margin-top:8px;">
+                    I am an Electrical and Electronics Engineering student entering my senior year at Florida International University, pursuing a minor in Computer Science. My experience spans a range of multidisciplinary projects, including the development of a lunar excavation robot system for NASA’s Lunabotics competition, Formula SAE electric component integration, and RF research focused on antenna optimization. I am currently starting a project to design a wireless communication system capable of reading human vital signs accurately without physical contact. Through coursework, I have gained hands-on experience analyzing electrical systems using MATLAB Simulink and designing schematics and layouts with AutoCAD Electrical and Revit, strengthening my ability to connect software analysis with real-world electrical design.
+                </p>
+            </div>
+
+            <div>
+                <strong style="display:block; color:var(--muted); margin-bottom:8px;">Skills</strong>
+                <div class="skills">
+                    <div class="skill">Ansys</div>
+                    <div class="skill">Python</div>
+                    <div class="skill">C</div>
+                    <div class="skill">C++</div>
+                    <div class="skill">VHDL</div>
+                    <div class="skill">SQL</div>
+                    <div class="skill">AutoCAD</div>
+                    <div class="skill">Revit</div>
+
+
+                </div>
+            </div>
+
+            <div class="footer">Available for internships or entry-level roles after graduating May 2026.</div>
+        </div>
+    </main>
+</div>
+
+<div id="resumeModal" class="modal">
+    <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h3 style="color:var(--neon);margin:0;">Marcos Bucarito — Resume</h3>
+            <div>
+                <a class="download-link" href=".idea/Marcos_Bucarito_Resume.pdf" download>⬇️ Download</a>
+                <button class="btn" id="closeResumeBtn">Close</button>
+            </div>
+        </div>
+        <iframe src=".idea/Marcos_Bucarito_Resume.pdf"></iframe>
+    </div>
+</div>
+
+<script>
+    (function(){
+      const canvas = document.getElementById('bgCanvas');
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = innerWidth, h = canvas.height = innerHeight;
+      const DPR = window.devicePixelRatio || 1;
+      canvas.width = w*DPR; canvas.height = h*DPR; ctx.scale(DPR, DPR);
+
+      const colors = ['rgba(0,255,106,0.9)','rgba(0,240,122,0.75)'];
+      const opts = {count:Math.floor(Math.min(120,(w*h)/16000)),vel:0.6,dist:140,size:[1.5,2.5]};
+      let parts=[];
+      function rand(a,b){return Math.random()*(b-a)+a;}
+      function create(){parts=[];for(let i=0;i<opts.count;i++){parts.push({x:rand(0,w),y:rand(0,h),vx:rand(-opts.vel,opts.vel),vy:rand(-opts.vel,opts.vel),r:rand(opts.size[0],opts.size[1]),c:colors[Math.floor(Math.random()*colors.length)],a:rand(0.4,1)})}}
+      create();
+      function step(){
+        ctx.clearRect(0,0,w,h);
+        for(let p of parts){
+          p.x+=p.vx; p.y+=p.vy;
+          if(p.x<0)p.x=w; if(p.x>w)p.x=0;
+          if(p.y<0)p.y=h; if(p.y>h)p.y=0;
+          ctx.beginPath(); ctx.globalAlpha=p.a; ctx.fillStyle=p.c;
+          ctx.arc(p.x,p.y,p.r,0,2*Math.PI); ctx.fill();
+        }
+        for(let i=0;i<parts.length;i++){
+          for(let j=i+1;j<parts.length;j++){
+            const a=parts[i],b=parts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+            if(d<opts.dist){ctx.beginPath();ctx.strokeStyle=`rgba(0,255,106,${0.15*(1-d/opts.dist)})`;ctx.lineWidth=1;ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      step();
+    })();
+
+    const openBtn=document.getElementById('openResumeBtn');
+    const closeBtn=document.getElementById('closeResumeBtn');
+    const modal=document.getElementById('resumeModal');
+    openBtn.onclick=()=>modal.style.display='flex';
+    closeBtn.onclick=()=>modal.style.display='none';
+    modal.onclick=e=>{if(e.target===modal)modal.style.display='none';};
+</script>
+</body>
+</html>
